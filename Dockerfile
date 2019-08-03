@@ -1,5 +1,5 @@
 FROM phusion/baseimage:latest
-MAINTAINER pducharme@me.com
+MAINTAINER bmatticus@gmail.com
 # Set correct environment variables
 ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
@@ -27,13 +27,8 @@ RUN \
 # Install Common Dependencies
 RUN apt-get -y install curl software-properties-common
 
-# Install Oracle Java 8
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-RUN add-apt-repository ppa:webupd8team/java && apt-get update
-RUN apt-get -y install oracle-java8-installer
-RUN update-java-alternatives -s java-8-oracle
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-ENV JAVA8_HOME /usr/lib/jvm/java-8-oracle
+# Install OpenJDK 8
+RUN apt-get -y install openjdk-8-jre
 
 # MongoDB
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -41,8 +36,8 @@ ADD mongodb.list /etc/apt/sources.list.d/mongodb.list
 RUN apt-get update && apt-get -y install mongodb-server
 
 # UniFi
-RUN apt-get -y install jsvc
-RUN curl -L -o unifi_sysvinit_all.deb https://dl.ubnt.com/unifi/5.6.37/unifi_sysvinit_all.deb
+RUN apt-get -y install jsvc binutils
+RUN curl -L -o unifi_sysvinit_all.deb https://dl.ubnt.com/unifi/5.10.25/unifi_sysvinit_all.deb
 RUN dpkg --install unifi_sysvinit_all.deb
 
 # Wipe out auto-generated data
